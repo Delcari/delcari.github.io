@@ -2,7 +2,7 @@
 <html>
 <head>
     <link rel="stylesheet" href="styles.css">
-    <title>Revs Revs Revs</title>
+    <title>4.2HD Calling Web Functions</title>
 </head>
 
 <body>
@@ -12,19 +12,70 @@
             
     </header>
 	
-	<script>
-		$.ajax({
-		method: “POST”,
-		url: “/v1/devices/220038000b47373336323230/StreetLight”,
-		data: { access_token: “53d172441af54a1c047179101b7b164d932f30c6”, args: “yellow” }
-		})
-	</script>
 
-    <div id="form">    
-        <input type="radio" name="light" value="green" id="green">
-        <input type="radio" name="light" value="yellow" id="yellow">
-        <input type="radio" name="light" value="red" id="red">
+   <div id="form">
+       <div id="green-container">
+            <input type="radio" name="light" value="green" id="green" onclick="ControlLed()">
+       </div>
+       <div id="yellow-container">
+           <input type="radio" name="light" value="yellow" id="yellow" onclick="ControlLed()">
+        </div>
+        <div id="red-container">
+            <input type="radio" name="light" value="red" id="red" onclick="ControlLed()">
+        </div>
     </div>
+       
+    <script type="text/javascript">
+        alert("hello");
+        window.onload = function(){
+        };
+        color = "yellow";
+        //document.getElementById(color).addEventListener("checked", ControlLed(color));
+
+        if (document.getElementById("red").checked)
+        {
+            ControlLed("red");
+        }
+
+        function ControlLed() {
+
+            red = document.getElementById("red");
+            yellow = document.getElementById("yellow");
+            green = document.getElementById("green");
+
+            if (red.checked)
+            {
+                color = "red"
+            }
+            else if (yellow.checked)
+            {
+                color = "yellow"
+            }
+            else 
+            {
+                color = "green"
+            }
+
+            fetch("https://api.particle.io/v1/devices/220038000b47373336323230/StreetLight/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: "/params=" + color + "&access_token=edbbcbec36c03716afe849144d5d25ff087b344e"
+            }).then(function(res) {
+            if (res.ok) {
+                console.log("Success")
+            } else if (res.status == 401) {
+                console.log("Oops! You are not authorized");
+            }
+            }, function(e) {
+            console.log("Error submitting form!");
+            });
+
+
+            //https://community.particle.io/t/javascript-fetch-api/22705/6
+        }
+    </script>
 </body>
 
 
